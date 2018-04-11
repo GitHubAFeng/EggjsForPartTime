@@ -7,7 +7,8 @@ module.exports = app => {
   const { router, controller } = app;
   router.get('/', controller.home.index);
 
-  router.get('/task/add', controller.task.add);
-
+  router.post('/task/add', controller.task.add);
+  router.post('/user/update', controller.user.update);
+  router.get('/user/token', controller.user.token);
 
 };

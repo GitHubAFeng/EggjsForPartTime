@@ -12,8 +12,8 @@ class TaskService extends Service {
 
 
     async insert(data) {
-        const result = await this.app.mysql.insert(table_name, data);
-        return result;
+        const {insertId} = await this.app.mysql.insert(table_name, data);
+        return insertId;
     }
 
 

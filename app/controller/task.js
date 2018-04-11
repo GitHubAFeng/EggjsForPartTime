@@ -23,18 +23,24 @@ class TaskController extends Controller {
 
         let data = {
             name: name,
-            sex: sex, phone: phone, 
-            start: start, 
-            end: end, 
-            detail: detail, 
+            sex: sex,
+            phone: phone,
+            start_time: start,
+            end_time: end,
+            detail: detail,
             image: image
         }
 
-        this.app.logger.info('add:'+ data);
+        this.app.logger.info('add:' + name);
+        let code = 0, msg = 'ok';
 
         const result = await ctx.service.task.insert(data);
+        if (result == 0) {
+            code = 1;
+            msg = 'error';
+        }
 
-        ctx.body = {"code":0,"msg":'ok',"result":result};
+        ctx.body = { "code": 0, "msg": 'ok', "data": result };
     }
 
 
