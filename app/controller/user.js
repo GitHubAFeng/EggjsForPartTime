@@ -2,6 +2,7 @@
 
 const jwt = require('jsonwebtoken');
 const Controller = require('egg').Controller;
+const WXBizDataCrypt = require('../utils/WXBizDataCrypt');
 
 class UserController extends Controller {
 
@@ -23,8 +24,9 @@ class UserController extends Controller {
             nickname
         };
 
-        this.app.logger.info('openid:' + openid);
-
+        // this.app.logger.info('openid:' + openid);
+        console.log('uid',ctx.locals.uid);
+        
         const options = {
             where: {
                 openid: openid
@@ -39,7 +41,7 @@ class UserController extends Controller {
 
 
     async token() {
-        const { ctx, service } = this;
+        const { ctx, service, app } = this;
 
         const code = ctx.query.code;
         if (code == 'undefined') {
@@ -62,26 +64,49 @@ class UserController extends Controller {
 
         const session_key = result.data.session_key; //会话密钥
         const openid = result.data.openid; //openid
+        await app.redis.set('session_key', session_key);
+        let uid = 0;
 
         const user = await ctx.service.user.find_by_openid(openid);
-        if (!user) {
+        if (user) {
+            uid = user.id;
+        } else {
             //注册用户
             const data = {
                 openid: openid,
             }
-            await ctx.service.user.insert(data);
+            uid = await ctx.service.user.insert(data);
         }
-        const token = this.get_token(openid);
+
+        const secretOrPrivateKey = this.app.config.secret_private_key; // 密钥
+        const secretOrPrivateSign = this.app.config.secret_private_sign; // 签名
+        const time_out = this.app.config.secret_private_time;  //token有效时间，24小时后过期
+        const auth_data = { "uid": uid, "sign": secretOrPrivateSign };
+        const content = { key: auth_data }; // 要生成token的加密信息
+
+        const token = jwt.sign(content, secretOrPrivateKey, { expiresIn: time_out }); // 创建token
+        // console.log(token);
+        // const test = await app.redis.get('session_key');
+        // console.log("test:",test);
+
+
         ctx.body = { "code": 0, "msg": 'ok', "data": token };
     }
 
+    //获取微信用户部分加密的信息，没什么用
+    async decode_userinfo() {
+        const { ctx, service, app } = this;
+        const iv = ctx.query.iv;
+        const encryptedData = ctx.query.encryptedData;
+        const appid = this.app.config.appid;
+        const appsecret = this.app.config.appsecret;
+        const sessionKey = await app.redis.get('session_key');
+        // console.log("iv:",iv);
+        // console.log("encryptedData:",encryptedData);
+        const pc = new WXBizDataCrypt(appid, sessionKey);
+        const data = pc.decryptData(encryptedData, iv);
+        ctx.body = { "code": 0, "msg": 'ok', "data": data };
 
-    async get_token(openid) {
-        const content = { key: openid }; // 要生成token的加密信息
-        const secretOrPrivateKey = this.app.config.secret_private_key; // 密钥
-        const time_out = this.app.config.secret_private_time;  //token有效时间，24小时后过期
-        const token = jwt.sign(content, secretOrPrivateKey, { expiresIn: time_out }); // 创建token
-        return token;
     }
 
 }

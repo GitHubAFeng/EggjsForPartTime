@@ -24,4 +24,10 @@ exports.mysql = {
     package: 'egg-logger',
   };
 
+  // redis 缓存
+  exports.redis = {
+    enable: true,
+    package: 'egg-redis',
+  };
+
   

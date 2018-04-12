@@ -8,8 +8,9 @@ module.exports = appInfo => {
   config.appid = 'wx36dfce1bfe86b036';
   config.appsecret = 'b7c7c05212a607a520e026d094dfcd3a';
 
-  //token密钥
-  config.secret_private_key = 'afeng';
+  
+  config.secret_private_key = 'afeng';  //token密钥，盐值
+  config.secret_private_sign = 'afeng123456'; //token 签名，用来验证客户端发来的token
 
   //token过期时间
   config.secret_private_time = 60 * 60 * 24;  //token有效时间，24小时后过期
@@ -47,6 +48,16 @@ module.exports = appInfo => {
     // 是否加载到 agent 上，默认关闭
     agent: false,
   };
+
+
+  config.redis = {
+    client: {
+      port: 6379,          // Redis port
+      host: '127.0.0.1',   // Redis host
+      password: 'afeng',
+      db: 0,
+    },
+  }
 
   //日志目录
   exports.logger = {
