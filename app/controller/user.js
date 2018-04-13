@@ -6,6 +6,15 @@ const WXBizDataCrypt = require('../utils/WXBizDataCrypt');
 
 class UserController extends Controller {
 
+    async getUserInfo() {
+        const { ctx, service } = this;
+
+        const data = { id: ctx.locals.uid }
+        const userinfo = await ctx.service.user.find(data)
+        ctx.body = { "code": 0, "msg": 'ok', "data": userinfo };
+
+    }
+
 
     async update() {
         const { ctx, service } = this;
@@ -25,8 +34,8 @@ class UserController extends Controller {
         };
 
         // this.app.logger.info('openid:' + openid);
-        console.log('uid',ctx.locals.uid);
-        
+        console.log('uid', ctx.locals.uid);
+
         const options = {
             where: {
                 openid: openid
@@ -64,7 +73,7 @@ class UserController extends Controller {
 
         const session_key = result.data.session_key; //会话密钥
         const openid = result.data.openid; //openid
-        await app.redis.set('session_key', session_key);
+        // await app.redis.set('session_key', session_key);
         let uid = 0;
 
         const user = await ctx.service.user.find_by_openid(openid);

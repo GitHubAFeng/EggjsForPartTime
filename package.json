@@ -4,11 +4,14 @@
   "description": "",
   "private": true,
   "dependencies": {
+    "await-stream-ready": "^1.0.1",
     "egg": "^2.2.1",
+    "egg-multipart": "^2.0.0",
     "egg-mysql": "^3.0.0",
     "egg-redis": "^2.0.0",
     "egg-scripts": "^2.5.0",
-    "jsonwebtoken": "^8.2.1"
+    "jsonwebtoken": "^8.2.1",
+    "stream-wormhole": "^1.0.3"
   },
   "devDependencies": {
     "autod": "^3.0.1",

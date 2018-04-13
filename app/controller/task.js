@@ -1,14 +1,33 @@
 'use strict';
 
+const path = require('path');
+const fs = require('fs');
+const sendToWormhole = require('stream-wormhole'); //需要安装stream-wormhole
+const awaitWriteStream = require('await-stream-ready').write; //需要安装await-stream-ready
+
 const Controller = require('egg').Controller;
 
 class TaskController extends Controller {
-    async info() {
-        const { ctx, service } = this;
-        // const userId = ctx.query.id;
-        // const user = await ctx.service.user.find(userId);
-        // ctx.body = user;
 
+    async upload() {
+        const { ctx, app } = this;
+        const parts = ctx.multipart();
+        const site_root = app.config.root;
+        let file_urls = [];
+        let stream;
+        while ((stream = await parts()) != null) {
+            const filename = stream.filename.toLowerCase();
+            const target = path.join(this.config.baseDir, 'app/public', filename);
+            const writeStream = fs.createWriteStream(target);
+            file_urls.push(site_root + '/public/' + filename);
+            try {
+                await awaitWriteStream(stream.pipe(writeStream));
+            } catch (err) {
+                await sendToWormhole(stream);
+                throw err;
+            }
+        }
+        ctx.body = { "code": 0, "msg": 'ok', "data": file_urls };
     }
 
     async add() {

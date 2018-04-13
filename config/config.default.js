@@ -8,12 +8,12 @@ module.exports = appInfo => {
   config.appid = 'wx36dfce1bfe86b036';
   config.appsecret = 'b7c7c05212a607a520e026d094dfcd3a';
 
-  
+
   config.secret_private_key = 'afeng';  //token密钥，盐值
   config.secret_private_sign = 'afeng123456'; //token 签名，用来验证客户端发来的token
 
   //token过期时间
-  config.secret_private_time = 60 * 60 * 24;  //token有效时间，24小时后过期
+  config.secret_private_time = 60 * 60 * 24;  //token有效时间，例如24小时 60 * 60 * 24 
 
   // use for cookie sign key, should change to your own and keep security
   config.keys = appInfo.name + '_1523340330306_155';
@@ -63,6 +63,18 @@ module.exports = appInfo => {
   exports.logger = {
     appLogName: `${appInfo.name}-debug.log`,
   }
+
+  //上传插件，文件类型白名单
+  exports.multipart = {
+    whitelist: [
+      '.jpg', '.jpeg', // image/jpeg
+      '.png', // image/png, image/x-png
+      '.gif', // image/gif
+    ],
+    fileSize: '5mb', //大小限制
+  }
+
+
 
   return config;
 };
