@@ -49,7 +49,7 @@ module.exports = appInfo => {
     agent: false,
   };
 
-
+//目前用户量不需要使用缓存…… 需要时到插件中开启
   config.redis = {
     client: {
       port: 6379,          // Redis port

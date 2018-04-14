@@ -13,13 +13,15 @@ class TaskController extends Controller {
         const { ctx, app } = this;
         const parts = ctx.multipart();
         const site_root = app.config.root;
-        let file_urls = [];
+        // let file_urls = [];  //暂时上传一张
+        let file_url = '';
         let stream;
         while ((stream = await parts()) != null) {
             const filename = stream.filename.toLowerCase();
-            const target = path.join(this.config.baseDir, 'app/public', filename);
+            const target = path.join(this.config.baseDir, 'app/public/images', filename);
             const writeStream = fs.createWriteStream(target);
-            file_urls.push(site_root + '/public/' + filename);
+            // file_urls.push(site_root + '/public/images/' + filename);
+            file_url = site_root + '/public/images/' + filename;
             try {
                 await awaitWriteStream(stream.pipe(writeStream));
             } catch (err) {
@@ -27,7 +29,7 @@ class TaskController extends Controller {
                 throw err;
             }
         }
-        ctx.body = { "code": 0, "msg": 'ok', "data": file_urls };
+        ctx.body = { "code": 0, "msg": 'ok', "data": file_url };
     }
 
     async add() {
@@ -38,7 +40,7 @@ class TaskController extends Controller {
         const start = ctx.request.body.start;
         const end = ctx.request.body.end;
         const detail = ctx.request.body.detail;
-        const image = ctx.request.body.image;
+        const images = ctx.request.body.images;
 
         let data = {
             name: name,
@@ -47,10 +49,10 @@ class TaskController extends Controller {
             start_time: start,
             end_time: end,
             detail: detail,
-            image: image
+            image: images
         }
 
-        this.app.logger.info('add:' + name);
+        // this.app.logger.info('add:' + name);
         let code = 0, msg = 'ok';
 
         const result = await ctx.service.task.insert(data);

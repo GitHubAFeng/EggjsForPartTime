@@ -24,14 +24,15 @@ exports.logger = {
   package: 'egg-logger',
 };
 
-// redis 缓存
-exports.redis = {
-  enable: true,
-  package: 'egg-redis',
-};
+//目前用户量不需要使用缓存……
+// redis 缓存 
+// exports.redis = {
+//   enable: true,
+//   package: 'egg-redis',
+// };
 
 // 文件上传
-exports.redis = {
+exports.multipart = {
   enable: true,
   package: 'egg-multipart',
 };

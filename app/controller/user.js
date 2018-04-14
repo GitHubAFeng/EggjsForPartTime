@@ -15,7 +15,7 @@ class UserController extends Controller {
 
     }
 
-
+    //更新用户信息
     async update() {
         const { ctx, service } = this;
         const avatar = ctx.request.body.avatar;
@@ -32,9 +32,6 @@ class UserController extends Controller {
             country,
             nickname
         };
-
-        // this.app.logger.info('openid:' + openid);
-        console.log('uid', ctx.locals.uid);
 
         const options = {
             where: {
@@ -58,8 +55,6 @@ class UserController extends Controller {
             return;
         }
 
-        //openid:"oqjZc5UBrVpCA2ugUzVuHtpZ2v4g"
-
         const appid = this.app.config.appid;
         const appsecret = this.app.config.appsecret;
 
@@ -73,19 +68,29 @@ class UserController extends Controller {
 
         const session_key = result.data.session_key; //会话密钥
         const openid = result.data.openid; //openid
-        // await app.redis.set('session_key', session_key);
         let uid = 0;
-
         const user = await ctx.service.user.find_by_openid(openid);
         if (user) {
             uid = user.id;
+            const data = {
+                session_key,
+            };
+            const options = {
+                where: {
+                    id: uid
+                }
+            };
+            await ctx.service.user.update(data, options);
         } else {
             //注册用户
             const data = {
-                openid: openid,
+                openid,
+                session_key
             }
             uid = await ctx.service.user.insert(data);
         }
+
+        // await app.redis.set(uid + '_session_key', session_key); //目前用户量不需要使用缓存……
 
         const secretOrPrivateKey = this.app.config.secret_private_key; // 密钥
         const secretOrPrivateSign = this.app.config.secret_private_sign; // 签名
@@ -109,9 +114,9 @@ class UserController extends Controller {
         const encryptedData = ctx.query.encryptedData;
         const appid = this.app.config.appid;
         const appsecret = this.app.config.appsecret;
-        const sessionKey = await app.redis.get('session_key');
-        // console.log("iv:",iv);
-        // console.log("encryptedData:",encryptedData);
+        const user = await ctx.service.user.find(ctx.locals.uid);
+        // const sessionKey = await app.redis.get(ctx.locals.uid + '_session_key'); //目前用户量不需要使用缓存……
+        const sessionKey = user.session_key;
         const pc = new WXBizDataCrypt(appid, sessionKey);
         const data = pc.decryptData(encryptedData, iv);
         ctx.body = { "code": 0, "msg": 'ok', "data": data };
