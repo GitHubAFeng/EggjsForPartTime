@@ -9,6 +9,16 @@ const Controller = require('egg').Controller;
 
 class TaskController extends Controller {
 
+
+    async getlist() {
+        const { ctx, service } = this;
+        const result = await ctx.service.task.getList({});
+
+        ctx.body = { "code": 0, "msg": 'ok', "data": result };
+
+    }
+
+
     async upload() {
         const { ctx, app } = this;
         const parts = ctx.multipart();
@@ -41,6 +51,8 @@ class TaskController extends Controller {
         const end = ctx.request.body.end;
         const detail = ctx.request.body.detail;
         const images = ctx.request.body.images;
+        const title = ctx.request.body.title;
+        const user_avatar = ctx.request.body.user_avatar;
 
         let data = {
             name: name,
@@ -49,7 +61,10 @@ class TaskController extends Controller {
             start_time: start,
             end_time: end,
             detail: detail,
-            image: images
+            image: images,
+            title,
+            user_avatar,
+            is_auth: 1
         }
 
         // this.app.logger.info('add:' + name);

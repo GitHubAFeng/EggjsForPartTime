@@ -13,6 +13,7 @@ module.exports = app => {
 
   router.post('/task/add', auth, controller.task.add);
   router.post('/task/upload', auth, controller.task.upload);
+  router.get('/task/getlist', auth, controller.task.getlist);
   router.post('/user/update', auth, controller.user.update);
   router.get('/user/token', controller.user.token);
   router.get('/user/decode_userinfo', auth, controller.user.decode_userinfo);
