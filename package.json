@@ -12,6 +12,7 @@
     "egg-redis": "^2.0.0",
     "egg-scripts": "^2.5.0",
     "jsonwebtoken": "^8.2.1",
+    "moment": "^2.22.1",
     "stream-wormhole": "^1.0.3"
   },
   "devDependencies": {

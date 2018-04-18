@@ -18,7 +18,7 @@ class UserService extends Service {
 
 
     async insert(data) {
-        const timestamp = parseInt(new Date().getTime() / 1000);    // 当前时间戳
+        const timestamp = this.ctx.helper.moment_timestamp();    // 当前时间戳
         const obj = Object.assign({
             create_time: timestamp
         }, data);

@@ -14,18 +14,22 @@ class TaskController extends Controller {
         const { ctx, service } = this;
         const id = ctx.query.id;
 
-        const result = await ctx.service.task.find(id);
-
-        ctx.body = { "code": 0, "msg": 'ok', "data": result };
-
+        const { detail, start_time, end_time, sex, phone, name, user_avatar, title, image } = await ctx.service.task.find(id);
+        let data = {
+            detail,
+            start_time: ctx.helper.moment_timestring(start_time, 'YYYY-MM-DD'),
+            end_time: ctx.helper.moment_timestring(end_time, 'YYYY-MM-DD'),
+            sex, phone, name, user_avatar, title, image
+        }
+        ctx.body = { "code": 0, "msg": 'ok', "data": data };
     }
 
     async getlist() {
         const { ctx, service } = this;
-        const result = await ctx.service.task.getList({});
-
+        const page = ctx.query.page; //当前页码
+        const size = ctx.query.size; //每页数据数量
+        const result = await ctx.service.task.getList({ page, size });
         ctx.body = { "code": 0, "msg": 'ok', "data": result };
-
     }
 
 
@@ -65,12 +69,15 @@ class TaskController extends Controller {
         const user_avatar = ctx.request.body.user_avatar;
         const desc = detail.substr(0, 20) + '…';
 
+        const start_timestamp = ctx.helper.moment_timestamp(start);
+        const end_timestamp = ctx.helper.moment_timestamp(end);
+
         let data = {
             name: name,
             sex: sex,
             phone: phone,
-            start_time: start,
-            end_time: end,
+            start_time: start_timestamp,
+            end_time: end_timestamp,
             detail: detail,
             image: images,
             title,

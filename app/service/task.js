@@ -12,7 +12,7 @@ class TaskService extends Service {
 
 
     async insert(data) {
-        const timestamp = parseInt(new Date().getTime() / 1000);    // 当前时间戳
+        const timestamp = this.ctx.helper.moment_timestamp();    // 当前时间戳
         const obj = Object.assign({
             create_time: timestamp
         }, data);
@@ -21,8 +21,16 @@ class TaskService extends Service {
     }
 
     async getList(data) {
-        const sql = `SELECT * FROM ${table_name} WHERE is_auth=1 AND is_delete=0 `;
+        const page_size = data.size;
+        const page = data.page;
+        const count_sql = `SELECT COUNT(*) FROM ${table_name} WHERE is_auth=1 AND is_delete=0 `;
+        const count = await this.app.mysql.query(count_sql);
+        const page_total = Math.ceil(count / page_size);
+        const page_num = page_total > 0 && page > page_total ? page_total : page;
+        const page_start = page_size * (page_num - 1);
+        const sql = `SELECT * FROM ${table_name} WHERE is_auth=1 AND is_delete=0 order by create_time desc LIMIT ${page_start},${page_size}`;
         const results = await this.app.mysql.query(sql);
+        // console.log('sql   = ', sql);
         return results;
     }
 
