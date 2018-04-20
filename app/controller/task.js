@@ -28,7 +28,8 @@ class TaskController extends Controller {
         const { ctx, service } = this;
         const page = ctx.query.page; //当前页码
         const size = ctx.query.size; //每页数据数量
-        const result = await ctx.service.task.getList({ page, size });
+        const key = ctx.query.key; //搜索关键词
+        const result = await ctx.service.task.getList({ page, size, key });
         ctx.body = { "code": 0, "msg": 'ok', "data": result };
     }
 
