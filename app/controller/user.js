@@ -23,7 +23,6 @@ class UserController extends Controller {
         const country = ctx.request.body.country;
         const gender = ctx.request.body.gender;
         const nickname = ctx.request.body.nickname;
-        const openid = ctx.request.body.openid;
 
         const data = {
             city,
@@ -35,7 +34,7 @@ class UserController extends Controller {
 
         const options = {
             where: {
-                openid: openid
+                id: ctx.locals.uid
             }
         };
 

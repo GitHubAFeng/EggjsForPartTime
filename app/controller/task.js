@@ -14,12 +14,12 @@ class TaskController extends Controller {
         const { ctx, service } = this;
         const id = ctx.query.id;
 
-        const { detail, start_time, end_time, sex, phone, name, user_avatar, title, image } = await ctx.service.task.find(id);
+        const { detail, start_time, end_time, sex, phone, name, user_avatar, title, image, wechat } = await ctx.service.task.find(id);
         let data = {
             detail,
             start_time: ctx.helper.moment_timestring(start_time, 'YYYY-MM-DD'),
             end_time: ctx.helper.moment_timestring(end_time, 'YYYY-MM-DD'),
-            sex, phone, name, user_avatar, title, image
+            sex, phone, name, user_avatar, title, image, wechat
         }
         ctx.body = { "code": 0, "msg": 'ok', "data": data };
     }
@@ -66,6 +66,7 @@ class TaskController extends Controller {
         const detail = ctx.request.body.detail;
         const images = ctx.request.body.images;
         const title = ctx.request.body.title;
+        const wechat = ctx.request.body.wechat;
         const user_avatar = ctx.request.body.user_avatar;
         const desc = detail.substr(0, 20) + '…';
 
@@ -83,6 +84,7 @@ class TaskController extends Controller {
             title,
             user_avatar,
             desc,
+            wechat,
             is_auth: 1
         }
 

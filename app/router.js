@@ -19,5 +19,9 @@ module.exports = app => {
   router.get('/user/token', controller.user.token);
   router.get('/user/decode_userinfo', auth, controller.user.decode_userinfo);
   router.get('/user/get', auth, controller.user.getUserInfo);
+  router.get('/comments/getlist', auth, controller.comments.getlist);
+  router.post('/comments/add', auth, controller.comments.add);
 
+
+  
 };
