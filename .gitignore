@@ -11,3 +11,4 @@ run/
 *.sw*
 *.un~
 app/public/images
+config/config.default.js

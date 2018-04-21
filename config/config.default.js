@@ -3,7 +3,7 @@
 module.exports = appInfo => {
   const config = exports = {};
 
-  config.root = 'http://127.0.0.1:7001';
+  config.root = 'http://39.108.223.5';
 
   config.appid = 'wx36dfce1bfe86b036';
   config.appsecret = 'b7c7c05212a607a520e026d094dfcd3a';
@@ -37,9 +37,9 @@ module.exports = appInfo => {
       // 端口号
       port: '3306',
       // 用户名
-      user: 'root',
+      user: 'parttime',
       // 密码
-      password: 'root',
+      password: 'KtaCN4L6MhsN6FCY',
       // 数据库名
       database: 'parttime',
     },
