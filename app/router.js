@@ -9,7 +9,8 @@ module.exports = app => {
   const secretOrPrivateSign = app.config.secret_private_sign; // 签名
   const auth = app.middleware.auth({ key: secretOrPrivateKey, sign: secretOrPrivateSign }); //token验证
 
-  router.get('/', controller.home.index);
+  router.get('/', controller.home.hello);
+  router.get('/cEMwUCopyg.txt', controller.home.index);
 
   router.post('/task/add', auth, controller.task.add);
   router.post('/task/upload', auth, controller.task.upload);
@@ -23,5 +24,5 @@ module.exports = app => {
   router.post('/comments/add', auth, controller.comments.add);
 
 
-  
+
 };

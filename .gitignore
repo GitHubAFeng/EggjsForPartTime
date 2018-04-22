@@ -10,5 +10,5 @@ run/
 .DS_Store
 *.sw*
 *.un~
-app/public/images
 config/config.default.js
+processes.json

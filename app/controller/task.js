@@ -33,7 +33,7 @@ class TaskController extends Controller {
         ctx.body = { "code": 0, "msg": 'ok', "data": result };
     }
 
-
+    //如果上传时返回404，看看是不是没有创建app/public/images目录
     async upload() {
         const { ctx, app } = this;
         const parts = ctx.multipart();

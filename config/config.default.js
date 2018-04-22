@@ -3,7 +3,7 @@
 module.exports = appInfo => {
   const config = exports = {};
 
-  config.root = 'http://39.108.223.5';
+  config.root = 'https://task.iafeng.cc';
 
   config.appid = 'wx36dfce1bfe86b036';
   config.appsecret = 'b7c7c05212a607a520e026d094dfcd3a';
@@ -28,7 +28,7 @@ module.exports = appInfo => {
     },
   };
 
-
+  //到生产部署要改
   exports.mysql = {
     // 单数据库信息配置
     client: {
@@ -37,9 +37,11 @@ module.exports = appInfo => {
       // 端口号
       port: '3306',
       // 用户名
-      user: 'parttime',
+      // user: 'parttime',
+      user: 'root',
       // 密码
-      password: 'KtaCN4L6MhsN6FCY',
+      // password: 'KtaCN4L6MhsN6FCY',
+      password: 'root',
       // 数据库名
       database: 'parttime',
     },
