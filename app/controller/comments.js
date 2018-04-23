@@ -2,6 +2,7 @@
 
 const path = require('path');
 const fs = require('fs');
+const SWF = require('sensitive-word-filter');//敏感词过滤 cnpm install sensitive-word-filter --save
 const sendToWormhole = require('stream-wormhole'); //需要安装stream-wormhole
 const awaitWriteStream = require('await-stream-ready').write; //需要安装await-stream-ready
 
@@ -27,7 +28,9 @@ class CommentsController extends Controller {
         const { ctx, service } = this;
         const user_id = ctx.locals.uid;
         const task_id = ctx.request.body.task_id;
-        const detail = ctx.request.body.detail;
+        let detail = ctx.request.body.detail;
+
+        detail = SWF.filter(detail);
 
         let data = {
             user_id, task_id, detail, is_auth: 1

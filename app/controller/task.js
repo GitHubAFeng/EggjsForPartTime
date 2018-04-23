@@ -2,6 +2,7 @@
 
 const path = require('path');
 const fs = require('fs');
+const SWF = require('sensitive-word-filter');//敏感词过滤
 const sendToWormhole = require('stream-wormhole'); //需要安装stream-wormhole
 const awaitWriteStream = require('await-stream-ready').write; //需要安装await-stream-ready
 
@@ -59,17 +60,24 @@ class TaskController extends Controller {
 
     async add() {
         const { ctx, service } = this;
-        const name = ctx.request.body.name;
+        let name = ctx.request.body.name;
         const sex = ctx.request.body.sex;
         const phone = ctx.request.body.phone;
         const start = ctx.request.body.start;
         const end = ctx.request.body.end;
-        const detail = ctx.request.body.detail;
+        let detail = ctx.request.body.detail;
         const images = ctx.request.body.images;
-        const title = ctx.request.body.title;
-        const wechat = ctx.request.body.wechat;
+        let title = ctx.request.body.title;
+        let wechat = ctx.request.body.wechat;
         const user_avatar = ctx.request.body.user_avatar;
-        const desc = detail.substr(0, 20) + '…';
+        let desc = detail.substr(0, 20) + '…';
+
+        //过滤敏感词
+        title = SWF.filter(title);
+        detail = SWF.filter(detail);
+        name = SWF.filter(name);
+        desc = SWF.filter(desc);
+        wechat = SWF.filter(wechat);
 
         const start_timestamp = ctx.helper.moment_timestamp(start);
         const end_timestamp = ctx.helper.moment_timestamp(end);
